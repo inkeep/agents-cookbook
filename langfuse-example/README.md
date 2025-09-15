@@ -32,7 +32,7 @@ This script runs Langfuse datasets through a chat API and correlates the traces 
 Run the script with a dataset ID:
 
 ```bash
-pnpm start --dataset-id your_dataset_id
+pnpm start your_dataset_id
 ```
 
 ## How it works
