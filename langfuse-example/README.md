@@ -35,6 +35,11 @@ Run the script with a dataset ID:
 pnpm start your_dataset_id
 ```
 
+For example:
+```bash
+pnpm start testing-dataset
+```
+
 ## How it works
 
 1. Fetches a dataset from Langfuse using the provided dataset ID
