@@ -13,7 +13,7 @@ const tracer = otelTrace.getTracer('dataset-runner');
 const logger = getLogger('langfuse-dataset-runner');
 
 interface RunConfig {
-  datasetId: string;
+  datasetName: string;
   tenantId: string;
   projectId: string;
   graphId: string;
@@ -29,7 +29,7 @@ interface ChatAPIResponse {
 }
 
 
-const REQUIRED_CONFIG_FIELDS = ['datasetId', 'tenantId', 'projectId', 'graphId'] as const;
+const REQUIRED_CONFIG_FIELDS = ['datasetName', 'tenantId', 'projectId', 'graphId'] as const;
 const REQUIRED_ENV_VARS = [
   'LANGFUSE_PUBLIC_KEY',
   'LANGFUSE_SECRET_KEY',
@@ -63,7 +63,7 @@ function parseAndValidateConfig(): RunConfig {
     runName: process.env.INKEEP_RUN_NAME,
     baseUrl: process.env.INKEEP_AGENTS_RUN_API_URL,
     apiKey: process.env.INKEEP_AGENTS_RUN_API_KEY,
-    datasetId: args[0],
+    datasetName: args[0],
   };
 
   validateRequiredConfig(config);
@@ -82,9 +82,9 @@ function validateRequiredEnvVars(): void {
 }
 
 async function runDatasetEvaluation(config: RunConfig): Promise<void> {
-  const { datasetId, tenantId, projectId, graphId, runName, baseUrl, apiKey, metadata } = config;
+  const { datasetName, tenantId, projectId, graphId, runName, baseUrl, apiKey, metadata } = config;
 
-  logger.info({ datasetId, tenantId, projectId, graphId, runName }, 'Starting Langfuse dataset evaluation');
+  logger.info({ datasetName, tenantId, projectId, graphId, runName }, 'Starting Langfuse dataset evaluation');
 
   const authKey = apiKey || process.env.INKEEP_AGENTS_RUN_API_KEY;
   if (!authKey) throw new Error('API key is required. Set INKEEP_AGENTS_RUN_API_KEY');
@@ -96,11 +96,11 @@ async function runDatasetEvaluation(config: RunConfig): Promise<void> {
     baseUrl: process.env.LANGFUSE_BASE_URL!,
   });
 
-  const dataset = await langfuse.getDataset(datasetId);
-  if (!dataset) throw new Error(`Dataset ${datasetId} not found in Langfuse`);
+  const dataset = await langfuse.getDataset(datasetName);
+  if (!dataset) throw new Error(`Dataset ${datasetName} not found in Langfuse`);
 
   logger.info(
-    { datasetId, datasetName: dataset.name, itemCount: dataset.items?.length || 0 },
+    { datasetName: dataset.name, itemCount: dataset.items?.length || 0 },
     'Fetched dataset from Langfuse'
   );
 
@@ -115,13 +115,13 @@ async function runDatasetEvaluation(config: RunConfig): Promise<void> {
     await processItem(item, {
       chatClient,
       langfuse,
-      datasetId,
+      datasetName,
       runLabel,
       metadata: { tenantId, projectId, graphId, ...metadata },
     });
   }
 
-  logger.info({ datasetId }, 'Dataset evaluation completed');
+  logger.info({ datasetName }, 'Dataset evaluation completed');
 }
 
 async function processItem(
@@ -129,7 +129,7 @@ async function processItem(
   context: {
     chatClient: ChatAPIClient;
     langfuse: Langfuse;
-    datasetId: string;
+    datasetName: string;
     runLabel: string;
     metadata: Record<string, any>;
   }
@@ -146,7 +146,7 @@ async function processItem(
       userMessage,
       item,
       context.langfuse,
-      context.datasetId
+      context.datasetName
     );
     log.info({ traceId: result.traceId }, 'Processed dataset item');
 
@@ -155,7 +155,7 @@ async function processItem(
       await context.langfuse.flushAsync();
       await item.link(traceRef, context.runLabel, {
         description: 'Dataset run via Inkeep Agent Framework',
-        metadata: { datasetId: context.datasetId, ...context.metadata },
+        metadata: { datasetName: context.datasetName, ...context.metadata },
       });
       await context.langfuse.flushAsync();
       log.info({ traceId: result.traceId }, 'Linked dataset item to trace');
@@ -182,7 +182,7 @@ class ChatAPIClient {
     userMessage: string,
     datasetItem: any,
     langfuse: Langfuse,
-    datasetId: string
+    datasetName: string
   ): Promise<ChatAPIResponse> {
     // start an OTEL span so we can inject traceparent
     return tracer.startActiveSpan('chat-api-call', async (span) => {
@@ -208,7 +208,7 @@ class ChatAPIClient {
           name: `Dataset Item Execution: ${datasetItem.id}`,
           input: userMessage,
           metadata: {
-            datasetId,
+            datasetName,
             datasetItemId: datasetItem.id,
             tenantId: this.ctx.tenantId,
             projectId: this.ctx.projectId,

@@ -4,7 +4,8 @@
   "description": "Langfuse dataset evaluation script",
   "type": "module",
   "scripts": {
-    "start": "tsx langfuse-script.ts"
+    "start": "tsx langfuse-script.ts",
+    "eval": "tsx dataset-eval.ts"
   },
   "dependencies": {
     "@langfuse/tracing": "^4.0.0",
