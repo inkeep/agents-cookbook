@@ -51,11 +51,6 @@ async function main() {
 }
 
 function parseAndValidateConfig(): RunConfig {
-  const args = process.argv.slice(2);
-  if (args.length === 0) {
-    throw new Error('Missing required parameter: dataset-id\nUsage: pnpm start <dataset-id>');
-  }
-
   const config: Partial<RunConfig> = {
     tenantId: process.env.INKEEP_TENANT_ID,
     projectId: process.env.INKEEP_PROJECT_ID,
@@ -63,7 +58,7 @@ function parseAndValidateConfig(): RunConfig {
     runName: process.env.INKEEP_RUN_NAME,
     baseUrl: process.env.INKEEP_AGENTS_RUN_API_URL,
     apiKey: process.env.INKEEP_AGENTS_RUN_API_KEY,
-    datasetName: args[0],
+    datasetName: 'inkeep-weather-example-dataset',
   };
 
   validateRequiredConfig(config);
@@ -184,7 +179,6 @@ class ChatAPIClient {
     langfuse: Langfuse,
     datasetName: string
   ): Promise<ChatAPIResponse> {
-    // start an OTEL span so we can inject traceparent
     return tracer.startActiveSpan('chat-api-call', async (span) => {
       try {
         const chatPayload = { messages: [{ role: 'user', content: userMessage }] };
