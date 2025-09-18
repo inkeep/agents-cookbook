@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "langfuse-init-example": "tsx langfuse-example.ts",
-    "langfuse-run-dataset": "tsx langfuse-dataset.ts",
+    "langfuse-run-dataset": "tsx langfuse-dataset.ts"
   },
   "dependencies": {
     "@langfuse/tracing": "^4.0.0",
