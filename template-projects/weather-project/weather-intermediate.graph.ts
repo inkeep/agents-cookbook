@@ -49,7 +49,7 @@ const weatherAssistant = agent({
   name: 'Weather assistant',
   description: 'Responsible for routing between the geocoder agent and weather forecast agent',
   prompt:
-    'You are a helpful assistant. The time is {{time}}.  When the user asks about the weather in a given location, first ask the geocoder agent for the coordinates, and then pass those coordinates to the weather forecast agent to get the weather forecast',
+    'You are a helpful assistant. The time is {{time}} in the timezone {{requestContext.tz}}.  When the user asks about the weather in a given location, first ask the geocoder agent for the coordinates, and then pass those coordinates to the weather forecast agent to get the weather forecast',
   canDelegateTo: () => [weatherForecaster, geocoderAgent],
 });
 
