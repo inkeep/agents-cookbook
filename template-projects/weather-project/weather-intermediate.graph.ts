@@ -71,8 +71,8 @@ const geocoderAgent = agent({
 
 // Agent Graph
 export const weatherIntermediateGraph = agentGraph({
-  id: 'weather-graph',
-  name: 'Weather graph',
+  id: 'weather-intermediate-graph',
+  name: 'Weather intermediate graph',
   defaultAgent: weatherAssistant,
   agents: () => [weatherAssistant, weatherForecaster, geocoderAgent],
   contextConfig: timeContext
