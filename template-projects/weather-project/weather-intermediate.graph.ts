@@ -13,8 +13,11 @@ const timeFetcher = fetchDefinition({
   id: "time-info",
   name: "Time Information",
   fetchConfig: {
-    url: "https://script.google.com/macros/s/AKfycbyd5AcbAnWi2Yn0xhFRbyzS4qMq1VucMVgVvhul5XqS9HkAyJY/exec?tz={{requestContext.tz}}",
+    url: "https://world-time-api3.p.rapidapi.com/timezone/{{requestContext.tz}}",
     method: "GET",
+    headers: {
+      "x-rapidapi-key": "590c52974dmsh0da44377420ef4bp1c64ebjsnf8d55149e28d",
+    },
   },
   defaultValue: "Unable to fetch time information",
 });
