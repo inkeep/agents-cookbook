@@ -1,7 +1,7 @@
 import { agent, agentGraph, mcpTool, agentMcp } from '@inkeep/agents-sdk';
 
 // MCP Tools
-const weatherMcpTool = mcpTool({
+export const weatherMcpTool = mcpTool({
   id: 'fUI2riwrBVJ6MepT8rjx0',
   name: 'Weather',
   serverUrl: 'https://weather-mcp-hazel.vercel.app/mcp',

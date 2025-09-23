@@ -1,6 +1,7 @@
 import { agent, agentGraph, mcpTool, agentMcp } from '@inkeep/agents-sdk';
 import { contextConfig, fetchDefinition } from "@inkeep/agents-core";
 import { z } from "zod";
+import { weatherMcpTool } from './weather.graph.ts';
 
 // 1. Create the request schema
 // You can find a timezone list here: https://github.com/davidayalas/current-time?tab=readme-ov-file
@@ -33,13 +34,6 @@ const timeContext = contextConfig({
   },
 });
 
-// MCP Tools
-const weatherMcpTool = mcpTool({
-  id: 'fUI2riwrBVJ6MepT8rjx0',
-  name: 'Weather',
-  serverUrl: 'https://weather-mcp-hazel.vercel.app/mcp',
-});
-
 // Agents
 const weatherAssistant = agent({
   id: 'weather-assistant',
@@ -51,7 +45,7 @@ const weatherAssistant = agent({
 });
 
 const weatherForecaster = agent({
-  id: 'weather-forecaster',
+  id: 'weather-intermediate-forecaster',
   name: 'Weather forecaster',
   description:
     'This agent is responsible for taking in coordinates and returning the forecast for the weather at that location',
@@ -61,7 +55,7 @@ const weatherForecaster = agent({
 });
 
 const geocoderAgent = agent({
-  id: 'geocoder-agent',
+  id: 'geocoder-intermediate-agent',
   name: 'Geocoder agent',
   description: 'Responsible for converting location or address into coordinates',
   prompt:
