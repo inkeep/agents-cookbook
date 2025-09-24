@@ -1,6 +1,6 @@
 import { agent, agentGraph, mcpTool, agentMcp } from '@inkeep/agents-sdk';
 
-// MCP Tools
+// MCP Tool
 export const weatherMcpTool = mcpTool({
   id: 'fUI2riwrBVJ6MepT8rjx0',
   name: 'Weather',
