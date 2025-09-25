@@ -1,7 +1,7 @@
 import { agent, agentGraph, mcpTool, agentMcp } from '@inkeep/agents-sdk';
 import { contextConfig, fetchDefinition } from "@inkeep/agents-core";
 import { z } from "zod";
-import { weatherMcpTool } from '../tools/weather-mcp';
+import { weatherMcpTool } from './weather.graph.ts';
 
 // 1. Create the request schema
 // You can find a timezone list here: https://github.com/davidayalas/current-time?tab=readme-ov-file
@@ -52,7 +52,7 @@ const weatherForecaster = agent({
     'This agent is responsible for taking in coordinates and returning the forecast for the weather at that location',
   prompt:
     'You are a helpful assistant responsible for taking in coordinates and returning the forecast for that location using your forecasting tool. Pass in todays date as the start date if the user does not specify a date and 7 days from today as the end date.',
-  canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_weather_forecast_for_date_range"] })],
+    canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_weather_forecast_for_date_range"] })],
 });
 
 const geocoderAgent = agent({
@@ -61,7 +61,7 @@ const geocoderAgent = agent({
   description: 'Responsible for converting location or address into coordinates',
   prompt:
     'You are a helpful assistant responsible for converting location or address into coordinates using your geocode tool',
-  canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["geocode"] })],
+    canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["geocode"] })],
 });
 
 // Agent Graph

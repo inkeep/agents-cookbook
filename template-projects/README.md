@@ -19,7 +19,7 @@ This file must export a project with the following structure:
 - **graphs**: Function that returns an array of all graphs defined in the folder
 
 #### Graph Files
-Define your agents graphs in separate `.ts` files and import them into your `index.ts`.
+Define your agent graphs in separate `.graph.ts` files and import them into your `index.ts`.
 
 ### Example Structure
 
@@ -27,14 +27,13 @@ Define your agents graphs in separate `.ts` files and import them into your `ind
 template-projects/
 ├── my-project/
 │   ├── index.ts
-│   ├── graphs
-│       └── my-agent-graph.ts
+│   └── my-project.graph.ts
 ```
 
 ### Example `index.ts`
 
 ```typescript
-import { myAgentGraph } from './my-agent-graph.ts';
+import { myProjectGraph } from './my-project.graph.ts';
 import { project } from '@inkeep/agents-sdk';
 
 export const myProject = project({
