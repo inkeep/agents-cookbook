@@ -1,11 +1,5 @@
-import { agent, agentGraph, mcpTool, agentMcp } from '@inkeep/agents-sdk';
-
-// MCP Tool
-export const weatherMcpTool = mcpTool({
-  id: 'fUI2riwrBVJ6MepT8rjx0',
-  name: 'Weather',
-  serverUrl: 'https://weather-mcp-hazel.vercel.app/mcp',
-});
+import { agent, agentGraph, agentMcp } from '@inkeep/agents-sdk';
+import { weatherMcpTool } from '../tools/weather-mcp';
 
 // Agents
 const weatherAssistant = agent({
@@ -24,8 +18,8 @@ const weatherForecaster = agent({
     'This agent is responsible for taking in coordinates and returning the forecast for the weather at that location',
   prompt:
     'You are a helpful assistant responsible for taking in coordinates and returning the forecast for that location using your forecasting tool',
-    canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_weather_forecast"] })],
-  });
+  canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_weather_forecast"] })],
+});
 
 const geocoderAgent = agent({
   id: 'geocoder-agent',
@@ -33,8 +27,8 @@ const geocoderAgent = agent({
   description: 'Responsible for converting location or address into coordinates',
   prompt:
     'You are a helpful assistant responsible for converting location or address into coordinates using your geocode tool',
-    canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["geocode"] })],
-  });
+  canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["geocode"] })],
+});
 
 // Agent Graph
 export const weatherGraph = agentGraph({
