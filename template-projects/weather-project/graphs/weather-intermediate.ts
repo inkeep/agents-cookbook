@@ -14,6 +14,7 @@ const requestSchema = z.object({
 const timeFetcher = fetchDefinition({
   id: "time-info",
   name: "Time Information",
+  trigger: "invocation",
   fetchConfig: {
     url: "https://world-time-api3.p.rapidapi.com/timezone/{{requestContext.tz}}",
     method: "GET",
@@ -21,6 +22,10 @@ const timeFetcher = fetchDefinition({
       "x-rapidapi-key": "590c52974dmsh0da44377420ef4bp1c64ebjsnf8d55149e28d",
     },
   },
+  responseSchema: z.object({
+    datetime: z.string(),
+    timezone: z.string().optional(),
+  }),
   defaultValue: "Unable to fetch time information",
 });
 
