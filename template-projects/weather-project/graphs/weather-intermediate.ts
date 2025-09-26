@@ -1,7 +1,7 @@
 import { agent, agentGraph, mcpTool, agentMcp } from '@inkeep/agents-sdk';
 import { contextConfig, fetchDefinition } from "@inkeep/agents-core";
 import { z } from "zod";
-import { weatherMcpTool } from '../tools/weather-mcp';
+import { weatherMcpTool } from '../../weather-intermediate/tools/weather-mcp';
 
 // 1. Create the request schema
 // You can find a timezone list here: https://github.com/davidayalas/current-time?tab=readme-ov-file
