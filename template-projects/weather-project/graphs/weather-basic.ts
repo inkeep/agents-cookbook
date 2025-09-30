@@ -8,7 +8,7 @@ const weatherAssistant = agent({
   description: 'Responsible for routing between the geocoder agent and weather forecast agent',
   prompt:
     'You are a helpful assistant. When the user asks about the weather in a given location, first ask the geocoder agent for the coordinates, and then pass those coordinates to the weather forecast agent to get the weather forecast. If the user does not ask about weather related questions, politely decline to answer and redirect the user to a weather related question.',
-  canDelegateTo: () => [weatherForecaster, getCoordinatesAgent],
+  canDelegateTo: () => [weatherForecaster, coordinatesAgent],
 });
 
 const weatherForecaster = agent({
@@ -21,9 +21,9 @@ const weatherForecaster = agent({
   canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_weather_forecast"] })],
 });
 
-const getCoordinatesAgent = agent({
+const coordinatesAgent = agent({
   id: 'get-coordinates-agent',
-  name: 'Get coordinates agent',
+  name: 'Coordinates agent',
   description: 'Responsible for converting location or address into coordinates',
   prompt:
     'You are a helpful assistant responsible for converting location or address into coordinates using your coordinate converter tool',
@@ -36,5 +36,5 @@ export const weatherBasicGraph = agentGraph({
   name: 'Weather graph basic',
   description: 'Asks for the weather forecast for the given location',
   defaultAgent: weatherAssistant,
-  agents: () => [weatherAssistant, weatherForecaster, getCoordinatesAgent],
+  agents: () => [weatherAssistant, weatherForecaster, coordinatesAgent],
 });
