@@ -54,8 +54,8 @@ const weatherAssistant = agent({
   id: "weather-assistant-advanced",
   name: "Weather assistant",
   description:
-    "Responsible for routing between the geocoder agent and using the weather forecast tool",
-  prompt: `You are a helpful assistant. The time is {{time}} in the timezone {{requestContext.tz}}.  When the user asks about the weather in a given location, first ask the geocoder agent for the coordinates, 
+    "Responsible for routing between the coordinates agent and using the weather forecast tool",
+  prompt: `You are a helpful assistant. The time is {{time}} in the timezone {{requestContext.tz}}.  When the user asks about the weather in a given location, first ask the coordinates agent for the coordinates, 
     and then pass those coordinates to the weather forecast agent to get the weather forecast. Be sure to pass todays date to the weather forecaster.`,
   canDelegateTo: () => [coordinatesAgent],
   canUse: () => [
@@ -117,7 +117,7 @@ const coordinatesAgent = agent({
   prompt:
     "You are a helpful assistant responsible for converting location or address into coordinates using your coordinate converter tool",
   canUse: () => [
-    agentMcp({ server: weatherMcpTool, selectedTools: ["geocode"] }),
+    agentMcp({ server: weatherMcpTool, selectedTools: ["get_coordinates"] }),
   ],
 });
 
