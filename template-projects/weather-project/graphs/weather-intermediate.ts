@@ -3,6 +3,16 @@ import { contextConfig, fetchDefinition } from "@inkeep/agents-core";
 import { z } from "zod";
 import { weatherMcpTool } from '../tools/weather-mcp';
 
+/**
+ * Intermediate Weather Graph with Time Context
+ * 
+ * This agent extends the basic weather graph with a time context. To use this agent, you must have a timezone in the request context.
+ * 
+ * By passing in the timezone, the agent will fetch the current time and date and have it available when answering questions.
+ * 
+ * This enables the agent to answer more advanced questions about the weather, such as "what is the weather in Tokyo a week from now?"
+ */
+
 // 1. Create the request schema
 // You can find a timezone list here: https://github.com/davidayalas/current-time?tab=readme-ov-file
 // Example: US/Pacific, US/Eastern, etc.

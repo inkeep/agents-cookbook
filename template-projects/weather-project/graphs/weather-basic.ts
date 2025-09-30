@@ -1,6 +1,14 @@
 import { agent, agentGraph, agentMcp } from '@inkeep/agents-sdk';
 import { weatherMcpTool } from '../tools/weather-mcp';
 
+/**
+ * Basic Weather Graph
+ * 
+ * This agent can answer basic weather related questions, such as "what is the weather in Tokyo?"
+ * 
+ * This agent works by asking the coordinates agent for the coordinates of the given location and then passing those coordinates to the weather forecast agent to get the weather forecast.
+ */
+
 // Agents
 const weatherAssistant = agent({
   id: 'weather-assistant',

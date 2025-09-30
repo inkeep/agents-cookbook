@@ -4,7 +4,7 @@ import { z } from "zod";
 import { weatherMcpTool } from "../tools/weather-mcp";
 
 /**
- * Advanced Weather Graph with Time Context & Structured Output
+ * Advanced Weather Graph with Time Context & Rich UI Rendering
  * 
  * This graph extends the basic weather graph with two key enhancements:
  * 1. Time-aware responses: Provides current time context to the weather assistant for more accurate, date-specific forecasts
