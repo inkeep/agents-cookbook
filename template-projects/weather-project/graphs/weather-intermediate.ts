@@ -47,11 +47,11 @@ const weatherAssistant = agent({
   description: 'Responsible for routing between the geocoder agent and weather forecast agent',
   prompt:
     'You are a helpful assistant. The time is {{time}} in the timezone {{requestContext.tz}}.  When the user asks about the weather in a given location, first ask the geocoder agent for the coordinates, and then pass those coordinates to the weather forecast agent to get the weather forecast. Be sure to pass todays date to the weather forecaster.',
-  canDelegateTo: () => [weatherForecaster, geocoderAgent],
+  canDelegateTo: () => [weatherForecaster, getCoordinatesAgent],
 });
 
 const weatherForecaster = agent({
-  id: 'weather-intermediate-forecaster',
+  id: 'weather-forecaster-intermediate',
   name: 'Weather forecaster',
   description:
     'This agent is responsible for taking in coordinates and returning the forecast for the weather at that location',
@@ -60,20 +60,21 @@ const weatherForecaster = agent({
   canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_weather_forecast_for_date_range"] })],
 });
 
-const geocoderAgent = agent({
-  id: 'geocoder-intermediate-agent',
-  name: 'Geocoder agent',
+const getCoordinatesAgent = agent({
+  id: 'get-coordinates-agent-intermediate',
+  name: 'Get coordinates agent',
   description: 'Responsible for converting location or address into coordinates',
   prompt:
-    'You are a helpful assistant responsible for converting location or address into coordinates using your geocode tool',
+    'You are a helpful assistant responsible for converting location or address into coordinates using your coordinate converter tool',
   canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["geocode"] })],
 });
 
 // Agent Graph
 export const weatherIntermediateGraph = agentGraph({
-  id: 'weather-intermediate-graph',
-  name: 'Weather intermediate graph',
+  id: 'weather-graph-intermediate',
+  name: 'Weather graph intermediate',
+  description: 'Asks for the weather forecast for the given location with time context',
   defaultAgent: weatherAssistant,
-  agents: () => [weatherAssistant, weatherForecaster, geocoderAgent],
+  agents: () => [weatherAssistant, weatherForecaster, getCoordinatesAgent],
   contextConfig: timeContext
 });
