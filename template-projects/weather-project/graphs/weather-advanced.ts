@@ -2,6 +2,7 @@ import { agent, agentGraph, mcpTool, agentMcp } from "@inkeep/agents-sdk";
 import { contextConfig, fetchDefinition } from "@inkeep/agents-core";
 import { z } from "zod";
 import { weatherMcpTool } from "../tools/weather-mcp";
+import { temperatureDataJsonSchema } from "../schemas/temperature-schema";
 
 /**
  * Advanced Weather Graph with Time Context & Rich UI Rendering
@@ -80,31 +81,7 @@ const weatherAssistant = agent({
       id: "temperature-data",
       name: "Temperature data",
       description: "Temperature data",
-      props: {
-        type: "object",
-        properties: {
-          temperature_data: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                date: {
-                  type: "string",
-                  description: "The date of the temperature data",
-                },
-                temperature: {
-                  type: "number",
-                  description: "The temperature in degrees Fahrenheit",
-                },
-                weather_code: {
-                  type: "number",
-                  description: "The weather code",
-                },
-              },
-            },
-          },
-        },
-      },
+      props: temperatureDataJsonSchema,
     },
   ],
 });
