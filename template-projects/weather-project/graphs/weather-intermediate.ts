@@ -1,5 +1,5 @@
 import { agent, agentGraph, mcpTool, agentMcp } from '@inkeep/agents-sdk';
-import { contextConfig, fetchDefinition } from "@inkeep/agents-core";
+import { contextConfig, fetchDefinition, headers } from "@inkeep/agents-core";
 import { z } from "zod";
 import { weatherMcpTool } from '../tools/weather-mcp';
 
@@ -16,9 +16,9 @@ import { weatherMcpTool } from '../tools/weather-mcp';
 // 1. Create the request schema
 // You can find a timezone list here: https://github.com/davidayalas/current-time?tab=readme-ov-file
 // Example: US/Pacific, US/Eastern, etc.
-const requestSchema = z.object({
+const headersSchema = headers({schema: z.object({
   tz: z.string(),
-});
+})});
 
 // 2. Create the fetcher
 const timeFetcher = fetchDefinition({
@@ -26,7 +26,7 @@ const timeFetcher = fetchDefinition({
   name: "Time Information",
   trigger: "invocation",
   fetchConfig: {
-    url: "https://world-time-api3.p.rapidapi.com/timezone/{{requestContext.tz}}",
+    url: `https://world-time-api3.p.rapidapi.com/timezone/{{${headersSchema.toTemplate("tz")}}}`,
     method: "GET",
     headers: {
       "x-rapidapi-key": "590c52974dmsh0da44377420ef4bp1c64ebjsnf8d55149e28d",
@@ -40,11 +40,8 @@ const timeFetcher = fetchDefinition({
 });
 
 // 3. Configure context
-const timeContext = contextConfig({
-  id: "time-context",
-  name: "Time Context",
-  description: "Fetches time information for personalization",
-  requestContextSchema: requestSchema,
+const weatherIntermediateGraphContext = contextConfig({
+  headers: headersSchema,
   contextVariables: {
     time: timeFetcher,
   },
@@ -86,5 +83,5 @@ export const weatherIntermediateGraph = agentGraph({
   description: 'Asks for the weather forecast for the given location with time context',
   defaultAgent: weatherAssistant,
   agents: () => [weatherAssistant, weatherForecaster, coordinatesAgent],
-  contextConfig: timeContext
+  contextConfig: weatherIntermediateGraphContext
 });
