@@ -4,9 +4,9 @@ import { z } from "zod";
 import { weatherMcpTool } from '../tools/weather-mcp';
 
 /**
- * Intermediate Weather Graph with Time Context
+ * Intermediate Weather Agent with Time Context
  * 
- * This agent extends the basic weather graph with a time context. To use this agent, you must have a timezone in the request context.
+ * This agent extends the basic weather agent with a time context. To use this agent, you must have a timezone in the request context.
  * 
  * By passing in the timezone, the agent will fetch the current time and date and have it available when answering questions.
  * 
@@ -42,14 +42,13 @@ const timeFetcher = fetchDefinition({
 });
 
 // 3. Configure context
-const weatherIntermediateGraphContext = contextConfig({
+const weatherIntermediateContext = contextConfig({
   headers: headersSchema,
   contextVariables: {
     time: timeFetcher,
   },
 });
 
-// Sub-agents (replaces agents)
 const weatherAssistant = subAgent({
   id: 'weather-assistant',
   name: 'Weather assistant',
@@ -78,12 +77,11 @@ const coordinatesAgent = subAgent({
   canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_coordinates"] })],
 });
 
-// Agent Graph
 export const weatherIntermediate = agent({
-  id: 'weather-graph-intermediate',
-  name: 'Weather graph intermediate',
+  id: 'weather-intermediate',
+  name: 'Weather intermediate',
   description: 'Asks for the weather forecast for the given location with time context',
   defaultSubAgent: weatherAssistant,
   subAgents: () => [weatherAssistant, weatherForecaster, coordinatesAgent],
-  contextConfig: weatherIntermediateGraphContext
+  contextConfig: weatherIntermediateContext
 });

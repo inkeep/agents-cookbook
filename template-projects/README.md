@@ -59,7 +59,7 @@ const mySubAgent = subAgent({
 
 export const myAgent = agent({
   id: 'my-project-agent',
-  name: 'My Project Graph',
+  name: 'My Project',
   defaultSubAgent: mySubAgent,
   subAgents: () => [mySubAgent],
 });

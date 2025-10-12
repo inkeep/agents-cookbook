@@ -1,7 +1,6 @@
 import { agent, subAgent, agentMcp } from '@inkeep/agents-sdk';
 import { weatherMcpTool } from '../tools/weather-mcp';
 
-// Sub-agents (individual agents within the graph)
 const weatherAssistant = subAgent({
   id: 'weather-assistant',
   name: 'Weather assistant',
@@ -30,10 +29,9 @@ const geocoderAgent = subAgent({
   canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["geocode"] })],
 });
 
-// Agent (replaces agentGraph - this is the orchestrator)
-export const weatherGraph = agent({
-  id: 'weather-graph',
-  name: 'Weather graph',
+export const weather = agent({
+  id: 'weather',
+  name: 'Weather',
   defaultSubAgent: weatherAssistant,
   subAgents: () => [weatherAssistant, weatherForecaster, geocoderAgent],
 });

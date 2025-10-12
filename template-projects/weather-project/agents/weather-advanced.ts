@@ -5,9 +5,9 @@ import { weatherMcpTool } from "../tools/weather-mcp";
 import { temperatureDataJsonSchema } from "../schemas/temperature-schema";
 
 /**
- * Advanced Weather Graph with Time Context & Rich UI Rendering
+ * Advanced Weather Agent with Time Context & Rich UI Rendering
  * 
- * This graph extends the basic weather graph with two key enhancements:
+ * This agent extends the basic weather agent with two key enhancements:
  * 1. Time-aware responses: Provides current time context to the weather assistant for more accurate, date-specific forecasts
  * 2. Structured data components: Outputs temperature data in a structured format compatible with Inkeep's React component library for rich UI rendering
  * 
@@ -42,7 +42,7 @@ const timeFetcher = fetchDefinition({
 });
 
 // Configure context for time information
-const weatherAdvancedGraphContext = contextConfig({
+const weatherAdvancedContext = contextConfig({
   headers: headersSchema,
   contextVariables: {
     time: timeFetcher,
@@ -96,12 +96,12 @@ const coordinatesAgent = subAgent({
   ],
 });
 
-// Agent Graph
+// Agent
 export const weatherAdvanced = agent({
-  id: "weather-graph-advanced",
-  name: "Weather graph advanced",
+  id: "weather-advanced",
+  name: "Weather advanced",
   description: "Asks for the weather forecast for the given location with time context and rich UI rendering",
   defaultSubAgent: weatherAssistant,
   subAgents: () => [weatherAssistant, coordinatesAgent],
-  contextConfig: weatherAdvancedGraphContext,
+  contextConfig: weatherAdvancedContext,
 });

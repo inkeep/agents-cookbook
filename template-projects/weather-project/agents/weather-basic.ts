@@ -2,7 +2,7 @@ import { agent, subAgent, agentMcp } from '@inkeep/agents-sdk';
 import { weatherMcpTool } from '../tools/weather-mcp';
 
 /**
- * Basic Weather Graph
+ * Basic Weather Agent
  * 
  * This agent can answer basic weather related questions, such as "what is the weather in Tokyo?"
  * 
@@ -37,10 +37,10 @@ const coordinatesAgent = subAgent({
   canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_coordinates"] })],
 });
 
-// Agent Graph
+// Agent
 export const weatherBasic = agent({
-  id: 'weather-graph-basic',
-  name: 'Weather graph basic',
+  id: 'weather-basic',
+  name: 'Weather basic',
   description: 'Asks for the weather forecast for the given location',
   defaultSubAgent: weatherAssistant,
   subAgents: () => [weatherAssistant, weatherForecaster, coordinatesAgent],
