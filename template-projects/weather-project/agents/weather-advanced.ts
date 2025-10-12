@@ -1,4 +1,4 @@
-import { agent, agentGraph, mcpTool, agentMcp } from "@inkeep/agents-sdk";
+import { agent, subAgent, mcpTool, agentMcp } from "@inkeep/agents-sdk";
 import { contextConfig, fetchDefinition, headers } from "@inkeep/agents-core";
 import { z } from "zod";
 import { weatherMcpTool } from "../tools/weather-mcp";
@@ -16,9 +16,11 @@ import { temperatureDataJsonSchema } from "../schemas/temperature-schema";
 
 // You can find a timezone list here: https://github.com/davidayalas/current-time?tab=readme-ov-file
 // Example: US/Pacific, US/Eastern, etc.
-const headersSchema = headers({schema: z.object({
-  tz: z.string(),
-})});
+const headersSchema = headers({
+  schema: z.object({
+    tz: z.string(),
+  })
+});
 
 // 2. Context fetcher for time information
 const timeFetcher = fetchDefinition({
@@ -47,8 +49,7 @@ const weatherAdvancedGraphContext = contextConfig({
   },
 });
 
-// Agents
-const weatherAssistant = agent({
+const weatherAssistant = subAgent({
   id: "weather-assistant-advanced",
   name: "Weather assistant",
   description:
@@ -83,7 +84,7 @@ const weatherAssistant = agent({
   ],
 });
 
-const coordinatesAgent = agent({
+const coordinatesAgent = subAgent({
   id: "coordinates-agent-advanced",
   name: "Coordinates agent",
   description:
@@ -96,11 +97,11 @@ const coordinatesAgent = agent({
 });
 
 // Agent Graph
-export const weatherAdvancedGraph = agentGraph({
+export const weatherAdvanced = agent({
   id: "weather-graph-advanced",
   name: "Weather graph advanced",
   description: "Asks for the weather forecast for the given location with time context and rich UI rendering",
-  defaultAgent: weatherAssistant,
-  agents: () => [weatherAssistant, coordinatesAgent],
+  defaultSubAgent: weatherAssistant,
+  subAgents: () => [weatherAssistant, coordinatesAgent],
   contextConfig: weatherAdvancedGraphContext,
 });

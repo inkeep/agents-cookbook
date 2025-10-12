@@ -54,7 +54,7 @@ function parseAndValidateConfig(): RunConfig {
   const config: Partial<RunConfig> = {
     tenantId: process.env.INKEEP_TENANT_ID,
     projectId: process.env.INKEEP_PROJECT_ID,
-    graphId: process.env.INKEEP_GRAPH_ID,
+    graphId: process.env.INKEEP_AGENT_ID,
     runName: process.env.INKEEP_RUN_NAME,
     baseUrl: process.env.INKEEP_AGENTS_RUN_API_URL,
     apiKey: process.env.INKEEP_AGENTS_RUN_API_KEY,
@@ -171,7 +171,7 @@ class ChatAPIClient {
     private baseUrl: string,
     private authKey: string,
     private ctx: { tenantId: string; projectId: string; graphId: string }
-  ) {}
+  ) { }
 
   async processDatasetItem(
     userMessage: string,

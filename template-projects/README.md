@@ -16,10 +16,10 @@ This file must export a project with the following structure:
 - **id**: Must exactly match the project folder name
 - **name**: Human-readable name for the project
 - **description**: Brief description of what the project does
-- **graphs**: Function that returns an array of all graphs defined in the folder
+- **agents**: Function that returns an array of all agents defined in the folder
 
-#### Graph Files
-Define your agents graphs in separate `.ts` files and import them into your `index.ts`.
+#### Agent Files
+Define your agents in separate `.ts` files and import them into your `index.ts`.
 
 ### Example Structure
 
@@ -27,46 +27,46 @@ Define your agents graphs in separate `.ts` files and import them into your `ind
 template-projects/
 ├── my-project/
 │   ├── index.ts
-│   ├── graphs
-│       └── my-agent-graph.ts
+│   ├── agents
+│       └── my-agent.ts
 ```
 
 ### Example `index.ts`
 
 ```typescript
-import { myAgentGraph } from './my-agent-graph.ts';
+import { myAgent } from './my-agent.ts';
 import { project } from '@inkeep/agents-sdk';
 
 export const myProject = project({
   id: 'my-project', // Must match folder name
   name: 'My Project',
   description: 'Description of what this project does',
-  graphs: () => [myProjectGraph], // Include all graphs from this folder
+  agents: () => [myAgent], // Include all agents from this folder
 });
 ```
 
-### Example Graph File (`my-project.graph.ts`)
+### Example Agent File (`my-agent.ts`)
 
 ```typescript
-import { agent, agentGraph } from '@inkeep/agents-sdk';
+import { agent, subAgent } from '@inkeep/agents-sdk';
 
-const myAgent = agent({
-  id: 'my-agent',
-  name: 'My Agent',
-  description: 'Agent description',
-  prompt: 'Your agent prompt here',
+const mySubAgent = subAgent({
+  id: 'my-sub-agent',
+  name: 'My SubAgent',
+  description: 'SubAgent description',
+  prompt: 'Your sub agent prompt here',
 });
 
-export const myProjectGraph = agentGraph({
-  id: 'my-project-graph',
+export const myAgent = agent({
+  id: 'my-project-agent',
   name: 'My Project Graph',
-  defaultAgent: myAgent,
-  agents: () => [myAgent],
+  defaultSubAgent: mySubAgent,
+  subAgents: () => [mySubAgent],
 });
 ```
 
 ## Key Requirements
 
 1. **Project ID**: The `id` in your project export must exactly match your folder name
-2. **All Graphs**: Include all graphs defined in your project folder in the `graphs` array
+2. **All Agents**: Include all agents defined in your project folder in the `agents` array
 3. **Export**: Your `index.ts` must export the project as a named export

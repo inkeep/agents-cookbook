@@ -1,4 +1,4 @@
-import { agent, agentGraph, mcpTool, agentMcp } from '@inkeep/agents-sdk';
+import { agent, subAgent, mcpTool, agentMcp } from '@inkeep/agents-sdk';
 import { contextConfig, fetchDefinition, headers } from "@inkeep/agents-core";
 import { z } from "zod";
 import { weatherMcpTool } from '../tools/weather-mcp';
@@ -16,9 +16,11 @@ import { weatherMcpTool } from '../tools/weather-mcp';
 // 1. Create the request schema
 // You can find a timezone list here: https://github.com/davidayalas/current-time?tab=readme-ov-file
 // Example: US/Pacific, US/Eastern, etc.
-const headersSchema = headers({schema: z.object({
-  tz: z.string(),
-})});
+const headersSchema = headers({
+  schema: z.object({
+    tz: z.string(),
+  }) as z.ZodType<{ tz: string }>
+});
 
 // 2. Create the fetcher
 const timeFetcher = fetchDefinition({
@@ -35,7 +37,7 @@ const timeFetcher = fetchDefinition({
   responseSchema: z.object({
     datetime: z.string(),
     timezone: z.string().optional(),
-  }),
+  }) as any,
   defaultValue: "Unable to fetch time information",
 });
 
@@ -47,8 +49,8 @@ const weatherIntermediateGraphContext = contextConfig({
   },
 });
 
-// Agents
-const weatherAssistant = agent({
+// Sub-agents (replaces agents)
+const weatherAssistant = subAgent({
   id: 'weather-assistant',
   name: 'Weather assistant',
   description: 'Responsible for routing between the coordinates agent and weather forecast agent',
@@ -57,7 +59,7 @@ const weatherAssistant = agent({
   canDelegateTo: () => [weatherForecaster, coordinatesAgent],
 });
 
-const weatherForecaster = agent({
+const weatherForecaster = subAgent({
   id: 'weather-forecaster-intermediate',
   name: 'Weather forecaster',
   description:
@@ -67,7 +69,7 @@ const weatherForecaster = agent({
   canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_weather_forecast_for_date_range"] })],
 });
 
-const coordinatesAgent = agent({
+const coordinatesAgent = subAgent({
   id: 'coordinates-agent-intermediate',
   name: 'Coordinates agent',
   description: 'Responsible for converting location or address into coordinates',
@@ -77,11 +79,11 @@ const coordinatesAgent = agent({
 });
 
 // Agent Graph
-export const weatherIntermediateGraph = agentGraph({
+export const weatherIntermediate = agent({
   id: 'weather-graph-intermediate',
   name: 'Weather graph intermediate',
   description: 'Asks for the weather forecast for the given location with time context',
-  defaultAgent: weatherAssistant,
-  agents: () => [weatherAssistant, weatherForecaster, coordinatesAgent],
+  defaultSubAgent: weatherAssistant,
+  subAgents: () => [weatherAssistant, weatherForecaster, coordinatesAgent],
   contextConfig: weatherIntermediateGraphContext
 });
