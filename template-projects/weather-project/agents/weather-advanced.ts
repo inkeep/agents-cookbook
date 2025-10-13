@@ -1,13 +1,13 @@
-import { agent, agentGraph, mcpTool, agentMcp } from "@inkeep/agents-sdk";
+import { agent, subAgent, mcpTool, agentMcp } from "@inkeep/agents-sdk";
 import { contextConfig, fetchDefinition, headers } from "@inkeep/agents-core";
 import { z } from "zod";
 import { weatherMcpTool } from "../tools/weather-mcp";
 import { temperatureDataJsonSchema } from "../schemas/temperature-schema";
 
 /**
- * Advanced Weather Graph with Time Context & Rich UI Rendering
+ * Advanced Weather Agent with Time Context & Rich UI Rendering
  * 
- * This graph extends the basic weather graph with two key enhancements:
+ * This agent extends the basic weather agent with two key enhancements:
  * 1. Time-aware responses: Provides current time context to the weather assistant for more accurate, date-specific forecasts
  * 2. Structured data components: Outputs temperature data in a structured format compatible with Inkeep's React component library for rich UI rendering
  * 
@@ -16,9 +16,11 @@ import { temperatureDataJsonSchema } from "../schemas/temperature-schema";
 
 // You can find a timezone list here: https://github.com/davidayalas/current-time?tab=readme-ov-file
 // Example: US/Pacific, US/Eastern, etc.
-const headersSchema = headers({schema: z.object({
-  tz: z.string(),
-})});
+const headersSchema = headers({
+  schema: z.object({
+    tz: z.string(),
+  })
+});
 
 // 2. Context fetcher for time information
 const timeFetcher = fetchDefinition({
@@ -40,15 +42,14 @@ const timeFetcher = fetchDefinition({
 });
 
 // Configure context for time information
-const weatherAdvancedGraphContext = contextConfig({
+const weatherAdvancedContext = contextConfig({
   headers: headersSchema,
   contextVariables: {
     time: timeFetcher,
   },
 });
 
-// Agents
-const weatherAssistant = agent({
+const weatherAssistant = subAgent({
   id: "weather-assistant-advanced",
   name: "Weather assistant",
   description:
@@ -83,7 +84,7 @@ const weatherAssistant = agent({
   ],
 });
 
-const coordinatesAgent = agent({
+const coordinatesAgent = subAgent({
   id: "coordinates-agent-advanced",
   name: "Coordinates agent",
   description:
@@ -95,12 +96,12 @@ const coordinatesAgent = agent({
   ],
 });
 
-// Agent Graph
-export const weatherAdvancedGraph = agentGraph({
-  id: "weather-graph-advanced",
-  name: "Weather graph advanced",
+// Agent
+export const weatherAdvanced = agent({
+  id: "weather-advanced",
+  name: "Weather advanced",
   description: "Asks for the weather forecast for the given location with time context and rich UI rendering",
-  defaultAgent: weatherAssistant,
-  agents: () => [weatherAssistant, coordinatesAgent],
-  contextConfig: weatherAdvancedGraphContext,
+  defaultSubAgent: weatherAssistant,
+  subAgents: () => [weatherAssistant, coordinatesAgent],
+  contextConfig: weatherAdvancedContext,
 });

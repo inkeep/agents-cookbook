@@ -1,16 +1,15 @@
-import { agent, agentGraph, agentMcp } from '@inkeep/agents-sdk';
+import { agent, subAgent, agentMcp } from '@inkeep/agents-sdk';
 import { weatherMcpTool } from '../tools/weather-mcp';
 
 /**
- * Basic Weather Graph
+ * Basic Weather Agent
  * 
  * This agent can answer basic weather related questions, such as "what is the weather in Tokyo?"
  * 
  * This agent works by asking the coordinates agent for the coordinates of the given location and then passing those coordinates to the weather forecast agent to get the weather forecast.
  */
 
-// Agents
-const weatherAssistant = agent({
+const weatherAssistant = subAgent({
   id: 'weather-assistant',
   name: 'Weather assistant',
   description: 'Responsible for routing between the coordinates agent and weather forecast agent',
@@ -19,7 +18,7 @@ const weatherAssistant = agent({
   canDelegateTo: () => [weatherForecaster, coordinatesAgent],
 });
 
-const weatherForecaster = agent({
+const weatherForecaster = subAgent({
   id: 'weather-forecaster',
   name: 'Weather forecaster',
   description:
@@ -29,7 +28,7 @@ const weatherForecaster = agent({
   canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_weather_forecast"] })],
 });
 
-const coordinatesAgent = agent({
+const coordinatesAgent = subAgent({
   id: 'get-coordinates-agent',
   name: 'Coordinates agent',
   description: 'Responsible for converting location or address into coordinates',
@@ -38,11 +37,11 @@ const coordinatesAgent = agent({
   canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_coordinates"] })],
 });
 
-// Agent Graph
-export const weatherBasicGraph = agentGraph({
-  id: 'weather-graph-basic',
-  name: 'Weather graph basic',
+// Agent
+export const weatherBasic = agent({
+  id: 'weather-basic',
+  name: 'Weather basic',
   description: 'Asks for the weather forecast for the given location',
-  defaultAgent: weatherAssistant,
-  agents: () => [weatherAssistant, weatherForecaster, coordinatesAgent],
+  defaultSubAgent: weatherAssistant,
+  subAgents: () => [weatherAssistant, weatherForecaster, coordinatesAgent],
 });

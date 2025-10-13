@@ -1,12 +1,12 @@
-import { agent, agentGraph, mcpTool, agentMcp } from '@inkeep/agents-sdk';
+import { agent, subAgent, mcpTool, agentMcp } from '@inkeep/agents-sdk';
 import { contextConfig, fetchDefinition, headers } from "@inkeep/agents-core";
 import { z } from "zod";
 import { weatherMcpTool } from '../tools/weather-mcp';
 
 /**
- * Intermediate Weather Graph with Time Context
+ * Intermediate Weather Agent with Time Context
  * 
- * This agent extends the basic weather graph with a time context. To use this agent, you must have a timezone in the request context.
+ * This agent extends the basic weather agent with a time context. To use this agent, you must have a timezone in the request context.
  * 
  * By passing in the timezone, the agent will fetch the current time and date and have it available when answering questions.
  * 
@@ -16,9 +16,11 @@ import { weatherMcpTool } from '../tools/weather-mcp';
 // 1. Create the request schema
 // You can find a timezone list here: https://github.com/davidayalas/current-time?tab=readme-ov-file
 // Example: US/Pacific, US/Eastern, etc.
-const headersSchema = headers({schema: z.object({
-  tz: z.string(),
-})});
+const headersSchema = headers({
+  schema: z.object({
+    tz: z.string(),
+  }) as z.ZodType<{ tz: string }>
+});
 
 // 2. Create the fetcher
 const timeFetcher = fetchDefinition({
@@ -35,20 +37,19 @@ const timeFetcher = fetchDefinition({
   responseSchema: z.object({
     datetime: z.string(),
     timezone: z.string().optional(),
-  }),
+  }) as any,
   defaultValue: "Unable to fetch time information",
 });
 
 // 3. Configure context
-const weatherIntermediateGraphContext = contextConfig({
+const weatherIntermediateContext = contextConfig({
   headers: headersSchema,
   contextVariables: {
     time: timeFetcher,
   },
 });
 
-// Agents
-const weatherAssistant = agent({
+const weatherAssistant = subAgent({
   id: 'weather-assistant',
   name: 'Weather assistant',
   description: 'Responsible for routing between the coordinates agent and weather forecast agent',
@@ -57,7 +58,7 @@ const weatherAssistant = agent({
   canDelegateTo: () => [weatherForecaster, coordinatesAgent],
 });
 
-const weatherForecaster = agent({
+const weatherForecaster = subAgent({
   id: 'weather-forecaster-intermediate',
   name: 'Weather forecaster',
   description:
@@ -67,7 +68,7 @@ const weatherForecaster = agent({
   canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_weather_forecast_for_date_range"] })],
 });
 
-const coordinatesAgent = agent({
+const coordinatesAgent = subAgent({
   id: 'coordinates-agent-intermediate',
   name: 'Coordinates agent',
   description: 'Responsible for converting location or address into coordinates',
@@ -76,12 +77,11 @@ const coordinatesAgent = agent({
   canUse: () => [agentMcp({ server: weatherMcpTool, selectedTools: ["get_coordinates"] })],
 });
 
-// Agent Graph
-export const weatherIntermediateGraph = agentGraph({
-  id: 'weather-graph-intermediate',
-  name: 'Weather graph intermediate',
+export const weatherIntermediate = agent({
+  id: 'weather-intermediate',
+  name: 'Weather intermediate',
   description: 'Asks for the weather forecast for the given location with time context',
-  defaultAgent: weatherAssistant,
-  agents: () => [weatherAssistant, weatherForecaster, coordinatesAgent],
-  contextConfig: weatherIntermediateGraphContext
+  defaultSubAgent: weatherAssistant,
+  subAgents: () => [weatherAssistant, weatherForecaster, coordinatesAgent],
+  contextConfig: weatherIntermediateContext
 });

@@ -1,11 +1,11 @@
-import { weatherBasicGraph } from './graphs/weather-basic.js';
-import { weatherIntermediateGraph } from './graphs/weather-intermediate.ts';
-import { weatherAdvancedGraph } from './graphs/weather-advanced.ts';
+import { weatherBasic } from './agents/weather-basic.js';
+import { weatherIntermediate } from './agents/weather-intermediate.js';
+import { weatherAdvanced } from './agents/weather-advanced.js';
 import { project } from '@inkeep/agents-sdk';
 
 export const myProject = project({
   id: 'weather-project',
   name: 'Weather Project',
   description: 'Weather project template',
-  graphs: () => [weatherBasicGraph, weatherIntermediateGraph, weatherAdvancedGraph],
+  agents: () => [weatherBasic, weatherIntermediate, weatherAdvanced],
 });
