@@ -4,8 +4,8 @@ import { weatherAdvanced } from './agents/weather-advanced.js';
 import { project } from '@inkeep/agents-sdk';
 
 export const myProject = project({
-  id: 'weather-project',
-  name: 'Weather Project',
+  id: 'weather',
+  name: 'Weather',
   description: 'Weather project template',
   agents: () => [weatherBasic, weatherIntermediate, weatherAdvanced],
 });
