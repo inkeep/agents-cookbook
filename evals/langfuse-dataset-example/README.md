@@ -26,7 +26,7 @@ This project provides two scripts for working with Langfuse datasets:
    # Execution context (for dataset runner)
    INKEEP_TENANT_ID=your_tenant_id
    INKEEP_PROJECT_ID=your_project_id
-   INKEEP_AGENT_ID=your_graph_id
+   INKEEP_AGENT_ID=your_agent_id
    ```
 
 ## Usage

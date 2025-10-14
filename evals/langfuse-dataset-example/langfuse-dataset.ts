@@ -16,7 +16,7 @@ interface RunConfig {
   datasetName: string;
   tenantId: string;
   projectId: string;
-  graphId: string;
+  agentId: string;
   runName?: string;
   baseUrl?: string;
   apiKey?: string;
@@ -29,7 +29,7 @@ interface ChatAPIResponse {
 }
 
 
-const REQUIRED_CONFIG_FIELDS = ['datasetName', 'tenantId', 'projectId', 'graphId'] as const;
+const REQUIRED_CONFIG_FIELDS = ['datasetName', 'tenantId', 'projectId', 'agentId'] as const;
 const REQUIRED_ENV_VARS = [
   'LANGFUSE_PUBLIC_KEY',
   'LANGFUSE_SECRET_KEY',
@@ -54,7 +54,7 @@ function parseAndValidateConfig(): RunConfig {
   const config: Partial<RunConfig> = {
     tenantId: process.env.INKEEP_TENANT_ID,
     projectId: process.env.INKEEP_PROJECT_ID,
-    graphId: process.env.INKEEP_AGENT_ID,
+    agentId: process.env.INKEEP_AGENT_ID,
     runName: process.env.INKEEP_RUN_NAME,
     baseUrl: process.env.INKEEP_AGENTS_RUN_API_URL,
     apiKey: process.env.INKEEP_AGENTS_RUN_API_KEY,
@@ -77,9 +77,9 @@ function validateRequiredEnvVars(): void {
 }
 
 async function runDatasetEvaluation(config: RunConfig): Promise<void> {
-  const { datasetName, tenantId, projectId, graphId, runName, baseUrl, apiKey, metadata } = config;
+  const { datasetName, tenantId, projectId, agentId, runName, baseUrl, apiKey, metadata } = config;
 
-  logger.info({ datasetName, tenantId, projectId, graphId, runName }, 'Starting Langfuse dataset evaluation');
+  logger.info({ datasetName, tenantId, projectId, agentId, runName }, 'Starting Langfuse dataset evaluation');
 
   const authKey = apiKey || process.env.INKEEP_AGENTS_RUN_API_KEY;
   if (!authKey) throw new Error('API key is required. Set INKEEP_AGENTS_RUN_API_KEY');
@@ -103,7 +103,7 @@ async function runDatasetEvaluation(config: RunConfig): Promise<void> {
     throw new Error('Dataset has no items; cannot run evaluation.');
   }
 
-  const chatClient = new ChatAPIClient(baseUrl, authKey, { tenantId, projectId, graphId });
+  const chatClient = new ChatAPIClient(baseUrl, authKey, { tenantId, projectId, agentId });
   const runLabel = `dataset-run:${new Date().toISOString()}`;
 
   for (const item of dataset.items) {
@@ -112,7 +112,7 @@ async function runDatasetEvaluation(config: RunConfig): Promise<void> {
       langfuse,
       datasetName,
       runLabel,
-      metadata: { tenantId, projectId, graphId, ...metadata },
+      metadata: { tenantId, projectId, agentId, ...metadata },
     });
   }
 
@@ -170,7 +170,7 @@ class ChatAPIClient {
   constructor(
     private baseUrl: string,
     private authKey: string,
-    private ctx: { tenantId: string; projectId: string; graphId: string }
+    private ctx: { tenantId: string; projectId: string; agentId: string }
   ) { }
 
   async processDatasetItem(
@@ -187,7 +187,7 @@ class ChatAPIClient {
           Authorization: `Bearer ${this.authKey}`,
           'x-inkeep-tenant-id': this.ctx.tenantId,
           'x-inkeep-project-id': this.ctx.projectId,
-          'x-inkeep-graph-id': this.ctx.graphId,
+          'x-inkeep-agent-id': this.ctx.agentId,
         };
         propagation.inject(otelContext.active(), headers);
 
@@ -206,7 +206,7 @@ class ChatAPIClient {
             datasetItemId: datasetItem.id,
             tenantId: this.ctx.tenantId,
             projectId: this.ctx.projectId,
-            graphId: this.ctx.graphId,
+            agentId: this.ctx.agentId,
             source: 'dataset-runner',
           },
           tags: ['dataset-evaluation'],
