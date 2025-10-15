@@ -12,6 +12,8 @@
   "dependencies": {
     "@inkeep/agents-core": "latest",
     "@inkeep/agents-sdk": "latest",
+    "mcp-handler": "^1.0.3",
+    "next": "^15.5.5",
     "zod": "^4.1.11"
   },
   "devDependencies": {
