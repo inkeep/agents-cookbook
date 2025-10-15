@@ -1,6 +1,5 @@
 import { agent, subAgent } from "@inkeep/agents-sdk";
 import { inkeepRagMcpTool } from "../tools/inkeep-rag-mcp";
-import { z } from "zod";
 
 /**
  * Docs Assistant Agent
