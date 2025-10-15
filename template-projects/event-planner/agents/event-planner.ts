@@ -69,7 +69,8 @@ const websearchAgent = subAgent({
 export const eventPlannerAgent = agent({
   id: "event-planner",
   name: "Event planner",
-  description: "Asks for the event planner for the given location",
+  description:
+    "Plans activities for any location based on 24-hour weather forecasts",
   defaultSubAgent: eventPlanner,
   subAgents: () => [
     eventPlanner,
