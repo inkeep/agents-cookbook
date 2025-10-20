@@ -18,6 +18,6 @@ export const events = dataComponent({
         }).optional().describe(`Specific details like dates, time, and location`),
         subItems: z.array(z.string()).optional().describe(`A list of sub-points or examples, like different parks for hiking`)
       })
-    )
+    ).describe(`The list of events`)
   })
 });
