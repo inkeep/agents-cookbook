@@ -195,7 +195,6 @@ const handler = createMcpHandler(
             ZENDESK_EMAIL,
             ZENDESK_TOKEN
           );
-1:47
           return {
             content: [
               {
@@ -468,20 +467,8 @@ const handler = createMcpHandler(
 
 // Wrap the handler to capture headers and pass them to tools
 const wrappedHandler = async (request: NextRequest) => {
-  console.log("=== MCP Server Headers ===");
-  console.log("Method:", request.method);
-  console.log("URL:", request.url);
-  console.log("Headers:");
-
   // Store headers globally so tools can access them
   currentRequestHeaders = request.headers;
-
-  // Log all headers
-  request.headers.forEach((value, key) => {
-    console.log(`  ${key}: ${value}`);
-  });
-
-  console.log("=== End Headers ===");
 
   return handler(request);
 };
