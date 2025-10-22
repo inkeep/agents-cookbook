@@ -1,4 +1,4 @@
-import { agent, subAgent, agentMcp } from "@inkeep/agents-sdk";
+import { agent, subAgent } from "@inkeep/agents-sdk";
 import { weatherMcpTool } from "../tools/weather-mcp";
 import { exaMcpTool } from "../tools/exa-mcp";
 import { activities } from "../data-components/activities";
@@ -37,8 +37,7 @@ const weatherForecaster = subAgent({
   prompt:
     "You are a helpful assistant responsible for taking in coordinates and returning the forecast for that location using your forecasting tool",
   canUse: () => [
-    agentMcp({
-      server: weatherMcpTool,
+     weatherMcpTool.with({
       selectedTools: ["get_weather_forecast"],
     }),
   ],
@@ -52,7 +51,7 @@ const coordinatesAgent = subAgent({
   prompt:
     "You are a helpful assistant responsible for converting location or address into coordinates using your coordinate converter tool",
   canUse: () => [
-    agentMcp({ server: weatherMcpTool, selectedTools: ["get_coordinates"] }),
+    weatherMcpTool.with({ selectedTools: ["get_coordinates"] }),
   ],
 });
 
@@ -63,7 +62,7 @@ const websearchAgent = subAgent({
   prompt:
     "You are a helpful assistant responsible for searching the web for information using your websearch tool",
   canUse: () => [
-    agentMcp({ server: exaMcpTool, selectedTools: ["web_search_exa"] }),
+    exaMcpTool.with({ selectedTools: ["web_search_exa"] }),
   ],
 });
 

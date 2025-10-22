@@ -1,4 +1,4 @@
-import { agent, agentMcp, subAgent } from "@inkeep/agents-sdk";
+import { agent, subAgent } from "@inkeep/agents-sdk";
 import { firecrawlMcpTool } from "../tools/firecrawl-mcp";
 
 const deepResearchAssistant = subAgent({
@@ -17,7 +17,7 @@ const webResearchAgent = subAgent({
   prompt:
     "You are a helpful assistant that can use firecrawl_search to find URLs. Use the firecrawl_search tool to find 3 URLs that are relevant to the user's question.",
   canUse: () => [
-    agentMcp({ server: firecrawlMcpTool, selectedTools: ["firecrawl_search"] }),
+    firecrawlMcpTool.with({ selectedTools: ["firecrawl_search"] }),
   ],
 });
 
@@ -28,7 +28,7 @@ const webScrapingAgent = subAgent({
   prompt:
     "You are a helpful assistant that can use firecrawl_scrape to scrape URLs",
   canUse: () => [
-    agentMcp({ server: firecrawlMcpTool, selectedTools: ["firecrawl_scrape"] }),
+    firecrawlMcpTool.with({ selectedTools: ["firecrawl_scrape"] }),
   ],
 });
 

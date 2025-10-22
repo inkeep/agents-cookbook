@@ -1,7 +1,6 @@
-import { agent, subAgent, agentMcp } from "@inkeep/agents-sdk";
+import { agent, subAgent } from "@inkeep/agents-sdk";
 import { knowledgeBaseMcpTool } from "../tools/knowledge-base-mcp";
 import { zendeskMcpTool } from "../tools/zendesk-mcp";
-import { z } from "zod";
 import { zendeskTicketCard } from "../data-components/ticketcard-data";
 
 /**
@@ -32,8 +31,7 @@ const zendeskAgent = subAgent({
     Use the Zendesk tool to help resolve customer inquiries, create tickets, and manage support cases.
     Always be professional and thorough in your responses.`,
   canUse: () => [
-    agentMcp({
-      server: zendeskMcpTool,
+   zendeskMcpTool.with({
       selectedTools: ["create_zendesk_ticket"],
       headers: {
         "zendesk-subdomain": "{{YOUR_ZENDESK_SUBDOMAIN}}",

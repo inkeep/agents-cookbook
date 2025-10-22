@@ -12,10 +12,10 @@
   "dependencies": {
     "@inkeep/agents-core": "latest",
     "@inkeep/agents-sdk": "latest",
-    "zod": "^4.1.11"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@types/node": "^22.18.8",
+    "@types/node": "^22.18.12",
     "json-schema-to-ts": "^3.1.1",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
