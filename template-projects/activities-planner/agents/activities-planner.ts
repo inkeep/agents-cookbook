@@ -22,9 +22,9 @@ const activitiesPlanner = subAgent({
   id: "activities-planner",
   name: "Activities planner",
   description:
-    "Responsible for routing between the coordinates agent, weather forecast agent, and websearch agent",
+    "Responsible for routing between the coordinates agent and weather forecast agent",
   prompt:
-    "You are a helpful assistant. When the user asks about activities in a given location, first ask the coordinates agent for the coordinates, and then pass those coordinates to the weather forecast agent to get the weather forecast. Then based on the weather forecast, ask the websearch agent to search the web for good activities given the weather.",
+    "You are a helpful assistant. When the user asks about event planning in a given location, first ask the coordinates agent for the coordinates, and then pass those coordinates to the weather forecast agent to get the weather forecast. Then based on the weather forecast, ask the websearch agent to search the web for good events given the weather.",
   canDelegateTo: () => [weatherForecaster, coordinatesAgent, websearchAgent],
   dataComponents: () => [activities],
 });
