@@ -1,10 +1,10 @@
 import { agent, subAgent, agentMcp } from "@inkeep/agents-sdk";
 import { weatherMcpTool } from "../tools/weather-mcp";
 import { exaMcpTool } from "../tools/exa-mcp";
-import { events } from "../data-components/events";
+import { activities } from "../data-components/activities";
 
 /**
- * Event Planner Agent
+ * Activities Planner Agent
  *
  * This agent helps plan events in a given location by considering the weather forecast.
  *
@@ -18,15 +18,15 @@ import { events } from "../data-components/events";
  * "What are some fun activities in Boston?"
  */
 
-const eventPlanner = subAgent({
-  id: "event-planner",
-  name: "Event planner",
+const activitiesPlanner = subAgent({
+  id: "activities-planner",
+  name: "Activities planner",
   description:
     "Responsible for routing between the coordinates agent and weather forecast agent",
   prompt:
     "You are a helpful assistant. When the user asks about event planning in a given location, first ask the coordinates agent for the coordinates, and then pass those coordinates to the weather forecast agent to get the weather forecast. Then based on the weather forecast, ask the websearch agent to search the web for good events given the weather.",
   canDelegateTo: () => [weatherForecaster, coordinatesAgent, websearchAgent],
-  dataComponents: () => [events],
+  dataComponents: () => [activities],
 });
 
 const weatherForecaster = subAgent({
@@ -68,14 +68,14 @@ const websearchAgent = subAgent({
 });
 
 // Agent
-export const eventPlannerAgent = agent({
-  id: "event-planner",
-  name: "Event planner",
+export const activitiesPlannerAgent = agent({
+  id: "activities-planner",
+  name: "Activities planner",
   description:
     "Plans activities for any location based on 24-hour weather forecasts",
-  defaultSubAgent: eventPlanner,
+  defaultSubAgent: activitiesPlanner,
   subAgents: () => [
-    eventPlanner,
+    activitiesPlanner,
     weatherForecaster,
     coordinatesAgent,
     websearchAgent,

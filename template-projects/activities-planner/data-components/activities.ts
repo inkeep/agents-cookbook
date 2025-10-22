@@ -1,12 +1,12 @@
 import { dataComponent } from '@inkeep/agents-sdk';
 import { z } from 'zod';
 
-export const events = dataComponent({
-  id: 'events',
-  name: `Events`,
-  description: `A list of events and activities`,
+export const activities = dataComponent({
+  id: 'activities',
+  name: `Activities`,
+  description: `A list of activities`,
   props: z.object({
-    events: z.array(
+    activities: z.array(
       z.object({
         title: z.string().describe(`The main title of the event or activity category`),
         category: z.enum(['Festival', 'Fitness', 'Outdoor Activity', 'Market', 'Tour', 'Other']).describe(`The type of event`),
@@ -18,6 +18,6 @@ export const events = dataComponent({
         }).optional().describe(`Specific details like dates, time, and location`),
         subItems: z.array(z.string()).optional().describe(`A list of sub-points or examples, like different parks for hiking`)
       })
-    ).describe(`The list of events`)
+    ).describe(`The list of activities`)
   })
 });
